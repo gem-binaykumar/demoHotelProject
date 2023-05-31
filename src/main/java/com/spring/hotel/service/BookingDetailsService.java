@@ -1,6 +1,6 @@
 package com.spring.hotel.service;
 
-import java.sql.SQLOutput;
+
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -101,10 +101,6 @@ public class BookingDetailsService {
 			else{
 				bookingDetails.setBill_amount(totalAmount);
 			}
-
-
-			System.out.println("Else ke theek niche");
-
 
 			if (bookingDetails.getRoom().size() > 3) {
 				double advanceAmount = netAmt * 0.5;
