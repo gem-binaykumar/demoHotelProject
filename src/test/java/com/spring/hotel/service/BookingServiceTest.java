@@ -45,6 +45,7 @@ class BookingServiceTest {
         BookingDetails bookingDetails = createBookingDetails();
         when(bookingRepo.save(any(BookingDetails.class))).thenReturn(bookingDetails);
         Long id = bookingDetails.getBookingID();
+
         when(bookingRepo.findById(id)).thenReturn(Optional.of(createBookingDetails()));
         when(bookingRepo.save(any(BookingDetails.class))).thenReturn(bookingDetails);
         bookingService.updateBookingDetails(id, bookingDetails);

@@ -66,7 +66,7 @@ class BookingDetailsControllerTest {
 
     @Test
     public void testGetBookingDetailsById_NotFound() {
-        Long bookingID = 1000L;
+        Long bookingID = 1001L;
         when(bookingService.getBookingDetailsById(bookingID)).thenThrow(NoSuchElementException.class);
         assertThrows(NoSuchElementException.class, () -> bookingController.getBookingDetailsById(bookingID));
     }
@@ -111,6 +111,7 @@ class BookingDetailsControllerTest {
 
     private BookingDetails createBookingDetails() {
         BookingDetails bookingDetails = new BookingDetails();
+        bookingDetails.setBookingID(1000L);
         bookingDetails.setStart_date(Date.valueOf("2023-05-18"));
         bookingDetails.setEnd_date(Date.valueOf("2023-05-20"));
         bookingDetails.setModeOfBooking("Online");
