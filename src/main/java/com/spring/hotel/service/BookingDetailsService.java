@@ -21,9 +21,13 @@ public class BookingDetailsService {
 
 
 	public List<BookingDetails> getAllBookingDetails() {
+
 		return new ArrayList<>(bookingRepo.findAll());
 	}
+	public BookingDetails getBookingDetailsById(Long bookingID){
+		return bookingRepo.findById(bookingID).orElseThrow(NoSuchElementException::new);
 
+	}
 
 
 	public void addBookingDetails(BookingDetails bookingDetails) {
@@ -68,6 +72,9 @@ public class BookingDetailsService {
 	}
 
 	public void updateBookingDetails(Long id, BookingDetails bookingDetails) {
+		if (!bookingRepo.existsById(id)) {
+			throw new NoSuchElementException("Cannot update booking as Booking ID does not exist.");
+		}
 		Optional<BookingDetails> existingBookingOptional = bookingRepo.findById(id);
 
 		if (existingBookingOptional.isPresent()) {
@@ -127,16 +134,28 @@ public class BookingDetailsService {
 			BookingDetails updatedBooking = bookingRepo.save(existingBooking);
 			System.out.println("Booking details updated: " + updatedBooking);
 
-		} else {
-			return;
 		}
 		
 	}
 
-	public void deleteBookingDetails(Long id) {
-		bookingRepo.deleteById(id);
-		
-	}
+//	public boolean deleteBookingDetails(Long id) {
+//		Optional<BookingDetails> bookingDetailsOptional = bookingRepo.findById(id);
+//
+//		if (bookingDetailsOptional.isPresent()) {
+//			bookingRepo.deleteById(id);
+//		} else {
+//			throw new IllegalArgumentException("Cannot delete booking as Booking ID does not exist.");
+//		}
+//		return true;
+//	}
+		public void deleteBookingDetails(Long bookingId) {
+			if (bookingRepo.existsById(bookingId)) {
+				bookingRepo.deleteById(bookingId);
+			} else {
+				throw new NoSuchElementException("Cannot delete booking as Booking ID does not exist.");
+			}
+		}
+
 
 
 }

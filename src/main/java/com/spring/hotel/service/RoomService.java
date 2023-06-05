@@ -44,8 +44,8 @@ public class RoomService {
 
 		if (existingRoom != null) {
 			// Preserve the existing IDs
-			Long roomID = existingRoom.getRoomID();
-			Long bookingID = existingRoom.getBookingDetails().getBookingID();
+//			Long roomID = existingRoom.getRoomID();
+//			Long bookingID = existingRoom.getBookingDetails().getBookingID();
 
 			// Update the room details
 			existingRoom.setRoomType(roomDetails.getRoomType());
