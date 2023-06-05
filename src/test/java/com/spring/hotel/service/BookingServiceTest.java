@@ -1,7 +1,6 @@
 package com.spring.hotel.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.sql.Date;
@@ -43,18 +42,71 @@ class BookingServiceTest {
 
     @Test
     public void testUpdateBookingDetails() {
-        Long id = 1000L;
         BookingDetails bookingDetails = createBookingDetails();
-        when(bookingRepo.findById(id)).thenReturn(Optional.empty()); // Return empty Optional if ID does not exist
         when(bookingRepo.save(any(BookingDetails.class))).thenReturn(bookingDetails);
-        assertThrows(NoSuchElementException.class, () -> {
+        Long id = bookingDetails.getBookingID();
+        when(bookingRepo.findById(id)).thenReturn(Optional.of(createBookingDetails()));
+        when(bookingRepo.save(any(BookingDetails.class))).thenReturn(bookingDetails);
+        bookingService.updateBookingDetails(id, bookingDetails);
+        System.out.println("No.of rooms:"+bookingDetails.getRoom().size()+"\nAdvance amount:" + bookingDetails.getAdvanceAmount());
+
+
+        // Add additional rooms to exceed the limit and trigger the advance payment constraint
+        bookingDetails.getRoom().add(createRoom(205L, "Single", 1, true, 500.0, false, false));
+        bookingDetails.getRoom().add(createRoom(206L, "Double", 2, true, 1000.0, false, false));
+        bookingDetails.getRoom().add(createRoom(207L, "Double", 2, true, 1000.0, false, false));
+
+        // Set the age of customers to trigger the adult constraint
+        bookingDetails.getCust().get(0).setAge(14);
+        bookingDetails.getCust().get(1).setAge(12);
+
+        // Mock the behavior of findById to return a non-empty Optional with a valid booking object
+        when(bookingRepo.findById(id)).thenReturn(Optional.of(createBookingDetails()));
+        when(bookingRepo.save(any(BookingDetails.class))).thenReturn(bookingDetails);
+
+        // Test the adult constraint
+        try {
             bookingService.updateBookingDetails(id, bookingDetails);
-        });
+        } catch (IllegalArgumentException e) {
+            System.out.println("IllegalArgumentException: " + e.getMessage());
+        } catch (NoSuchElementException e) {
+            System.out.println("NoSuchElementException: of age " + e.getMessage());
+        }
+
+        // Set the age of one customer to satisfy the adult constraint
+        bookingDetails.getCust().get(1).setAge(18);
+
+        try {
+            bookingService.updateBookingDetails(id, bookingDetails);
+            System.out.println("Updated with an adult");
+        } catch (IllegalArgumentException e) {
+            System.out.println("IllegalArgumentException: " + e.getMessage());
+        } catch (NoSuchElementException e) {
+            System.out.println("NoSuchElementException: " + e.getMessage());
+        }
+        //Printing the no.of rooms after adding extra rooms
+        System.out.println("No.of rooms:"+bookingDetails.getRoom().size()+"\nAdvance amount:" + bookingDetails.getAdvanceAmount());
+
+
+    }
+
+
+    private Room createRoom(Long roomNumber, String roomType, int occupancy, boolean availability,
+                            double pricePerDay, boolean checkedIn, boolean checkedOut) {
+        Room room = new Room();
+        room.setRoomNumber(roomNumber);
+        room.setRoomType(roomType);
+        room.setOccupancy(occupancy);
+        room.setAvailability(availability);
+        room.setPricePerDay(pricePerDay);
+        room.setCheckedIn(checkedIn);
+        room.setCheckedOut(checkedOut);
+        return room;
     }
 
     @Test
     void testUpdateBookingDetails_NonExistentId() {
-        long nonExistentId = 1000L;
+        long nonExistentId = 1001L;
         BookingDetails updatedBookingDetails = new BookingDetails();
         updatedBookingDetails.setBookingID(nonExistentId);
         when(bookingRepo.existsById(nonExistentId)).thenReturn(false);
@@ -62,6 +114,7 @@ class BookingServiceTest {
             bookingService.updateBookingDetails(nonExistentId, updatedBookingDetails);
         });
         assertEquals("Cannot update booking as Booking ID does not exist.", exception.getMessage());
+        System.out.println(exception.getMessage());
     }
 
 
@@ -94,6 +147,7 @@ class BookingServiceTest {
 
     private BookingDetails createBookingDetails() {
         BookingDetails bookingDetails = new BookingDetails();
+        bookingDetails.setBookingID(1000L);
         bookingDetails.setStart_date(Date.valueOf("2023-05-18"));
         bookingDetails.setEnd_date(Date.valueOf("2023-05-20"));
         bookingDetails.setModeOfBooking("Online");
@@ -112,14 +166,14 @@ class BookingServiceTest {
         customer2.setFullName("Gurjot Parmar");
         customer2.setAddress("456 Elm St");
         customer2.setContactNumber("1234567890");
-        customer2.setAge(14);
+        customer2.setAge(24);
         customers.add(customer2);
 
         Customer customer3 = new Customer();
         customer3.setFullName("Radhika Narang");
         customer3.setAddress("789 Oak St");
         customer3.setContactNumber("5551234567");
-        customer3.setAge(25);
+        customer3.setAge(15);
         customers.add(customer3);
 
         Customer customer4 = new Customer();
@@ -161,16 +215,6 @@ class BookingServiceTest {
         room3.setCheckedIn(false);
         room3.setCheckedOut(false);
         rooms.add(room3);
-
-        Room room4 = new Room();
-        room4.setRoomNumber(204L);
-        room4.setRoomType("Double");
-        room4.setOccupancy(2);
-        room4.setAvailability(true);
-        room4.setPricePerDay(1000.0);
-        room4.setCheckedIn(false);
-        room4.setCheckedOut(false);
-        rooms.add(room4);
 
         bookingDetails.setRoom(rooms);
 

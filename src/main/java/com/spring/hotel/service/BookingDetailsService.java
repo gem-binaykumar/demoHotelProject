@@ -72,9 +72,9 @@ public class BookingDetailsService {
 	}
 
 	public void updateBookingDetails(Long id, BookingDetails bookingDetails) {
-		if (!bookingRepo.existsById(id)) {
-			throw new NoSuchElementException("Cannot update booking as Booking ID does not exist.");
-		}
+//		if (!bookingRepo.existsById(id)) {
+//			throw new NoSuchElementException("Cannot update booking as Booking ID does not exist.");
+//		}
 		Optional<BookingDetails> existingBookingOptional = bookingRepo.findById(id);
 
 		if (existingBookingOptional.isPresent()) {
@@ -132,8 +132,11 @@ public class BookingDetailsService {
 			// Save the updated booking details
 			bookingRepo.save(existingBooking);
 			BookingDetails updatedBooking = bookingRepo.save(existingBooking);
-			System.out.println("Booking details updated: " + updatedBooking);
 
+
+		}
+		else{
+			throw new NoSuchElementException("Cannot update booking as Booking ID does not exist.");
 		}
 		
 	}
