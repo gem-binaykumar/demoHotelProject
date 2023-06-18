@@ -29,7 +29,12 @@ public class BookingDetailsController {
 		return ResponseEntity.ok(bd);
 
 	}
-	
+	@GetMapping("/bookingDetails/customer/{customerID}")
+	public ResponseEntity<List<BookingDetails>> getBookingDetailsByCustomerId(@PathVariable("customerID") Long customerId) {
+		List<BookingDetails> bookingDetails = bookServ.getBookingDetailsByCustomerId(customerId);
+		return ResponseEntity.ok(bookingDetails);
+	}
+
 	@PostMapping("/bookingDetails")
 	public ResponseEntity<String> addBookingDetails(@RequestBody BookingDetails bookingDetails) {
 		bookServ.addBookingDetails(bookingDetails);

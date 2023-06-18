@@ -31,8 +31,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private String getStackTraceAsString(Exception ex) {
         StringWriter sw = new StringWriter();
-        //PrintWriter pw = new PrintWriter(sw);
-       // ex.printStackTrace(pw);
         return sw.toString();
     }
 }

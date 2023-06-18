@@ -8,6 +8,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class HotelBookingApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(HotelBookingApplication.class, args);
 	}
 

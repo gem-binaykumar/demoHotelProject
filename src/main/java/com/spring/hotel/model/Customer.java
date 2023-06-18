@@ -1,101 +1,39 @@
 package com.spring.hotel.model;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
+@Data
 @Table(name = "customer")
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP", "EI_EXPOSE_REP2"})
 public class Customer {
 
-    @Id
-   // @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_seq")
 	@SequenceGenerator(name = "customer_seq", sequenceName = "customer_sequence", initialValue = 101, allocationSize = 1)
-
 	@Column(name = "customerID")
-    private Long customerID;
+	private Long customerID;
 
-    @Column(name = "full_name")
-    private String fullName;
+	@Column(name = "full_name")
+	private String fullName;
 
-    @Column(name = "address")
-    private String address;
+	@Column(name = "address")
+	private String address;
 
-    @Column(name = "contact_number")
-    private String contactNumber;
+	@Column(name = "contact_number")
+	private String contactNumber;
 
-    @Column(name = "age")
-    private int age;
+	@Column(name = "age")
+	private int age;
 
-    @ManyToOne
-    @JoinColumn(name = "bookingID")
+	@ManyToOne
+	@JoinColumn(name = "bookingID")
 	@JsonIgnore
-    private BookingDetails bookingDetails;
-    
-    
-    
-	public Customer() {
-		super();
-	}
+	private BookingDetails bookingDetails;
 
-	public Customer(Long customerID, String fullName, String address, String contactNumber, int age) {
-		super();
-		this.customerID = customerID;
-		this.fullName = fullName;
-		this.address = address;
-		this.contactNumber = contactNumber;
-		this.age = age;
-	}
-
-	public Long getCustomerID() {
-		return customerID;
-	}
-
-	public void setCustomerID(Long customerID) {
-		this.customerID = customerID;
-	}
-
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getContactNumber() {
-		return contactNumber;
-	}
-
-	public void setContactNumber(String contactNumber) {
-		this.contactNumber = contactNumber;
-	}
-
-	public int getAge() {
-		return age;
-	}
-
-	public void setAge(int age) {
-		this.age = age;
-	}
-	public BookingDetails getBookingDetails() {
-		return bookingDetails;
-	}
-
-	public void setBookingDetails(BookingDetails bookingDetails) {
-		this.bookingDetails = bookingDetails;
-	}
-	
-
-    
 }
-
-

@@ -30,6 +30,7 @@ class BookingServiceTest {
 
     @BeforeEach
     public void setup() {
+        System.out.println("Set up called");
         MockitoAnnotations.openMocks(this);
     }
 
@@ -144,6 +145,17 @@ class BookingServiceTest {
         when(bookingRepo.findById(id)).thenReturn(Optional.of(bookingDetails));
         BookingDetails result = bookingService.getBookingDetailsById(id);
         assertEquals(bookingDetails, result);
+    }
+    @Test
+    public void testGetBookingDetailsByCustomerId() {
+        Long customerId = 101L;
+        // Empty list to simulate no booking details found for the customer
+        when(bookingRepo.findByCustCustomerID(customerId)).thenReturn(new ArrayList<>());
+
+        Exception exception = assertThrows(NoSuchElementException.class, () -> {
+            bookingService.getBookingDetailsByCustomerId(customerId);
+        });
+        assertEquals("No booking details found for customer ID: " + customerId, exception.getMessage());
     }
 
     private BookingDetails createBookingDetails() {

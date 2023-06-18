@@ -11,34 +11,45 @@ import org.springframework.stereotype.Service;
 
 import com.spring.hotel.model.BookingDetails;
 import com.spring.hotel.repository.BookingDetailsRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Service
 public class BookingDetailsService {
 
 	@Autowired
 	public BookingDetailsRepository bookingRepo;
+	private static final Logger logger = LoggerFactory.getLogger(BookingDetailsService.class);
 
 
 
 	public List<BookingDetails> getAllBookingDetails() {
-
+		logger.debug("Fetching all booking details.");
 		return new ArrayList<>(bookingRepo.findAll());
 	}
 	public BookingDetails getBookingDetailsById(Long bookingID){
-		return bookingRepo.findById(bookingID).orElseThrow(NoSuchElementException::new);
+		logger.debug("Fetching all booking details of "+ bookingID);
+		return bookingRepo.findById(bookingID).orElseThrow(() -> new NoSuchElementException("Booking details not found for ID: " + bookingID));
 
 	}
-
+	public List<BookingDetails> getBookingDetailsByCustomerId(Long customerId) {
+		List<BookingDetails> bookingDetails = bookingRepo.findByCustCustomerID(customerId);
+		if (bookingDetails.isEmpty()) {
+			throw new NoSuchElementException("No booking details found for customer ID: " + customerId);
+		}
+		logger.info("Fetching booking details of  Customer ID : {}", customerId);
+		return bookingDetails;
+	}
 
 	public void addBookingDetails(BookingDetails bookingDetails) {
+		logger.info("Adding booking details: {}", bookingDetails);
 		long durationInMillis = bookingDetails.getEnd_date().getTime() - bookingDetails.getStart_date().getTime();
 		int durationInDays = (int) TimeUnit.DAYS.convert(durationInMillis, TimeUnit.MILLISECONDS) + 1;
 		bookingDetails.setDuration(durationInDays);
 
 		if (bookingDetails.getCust().stream().anyMatch(c -> c.getAge() < 18)) {
 			boolean hasAdult = bookingDetails.getCust().stream().anyMatch(c -> c.getAge() >= 18);
-
-
 			if (!hasAdult) {
 				throw new IllegalArgumentException("Cannot add a booking without an associated adult customer.");
 			}
@@ -72,9 +83,6 @@ public class BookingDetailsService {
 	}
 
 	public void updateBookingDetails(Long id, BookingDetails bookingDetails) {
-//		if (!bookingRepo.existsById(id)) {
-//			throw new NoSuchElementException("Cannot update booking as Booking ID does not exist.");
-//		}
 		Optional<BookingDetails> existingBookingOptional = bookingRepo.findById(id);
 
 		if (existingBookingOptional.isPresent()) {
@@ -89,7 +97,6 @@ public class BookingDetailsService {
 			if (bookingDetails.getCust().stream().anyMatch(c -> c.getAge() < 18)) {
 				// Check if there is at least one adult associated with a minor customer
 				boolean hasAdult = bookingDetails.getCust().stream().anyMatch(c -> c.getAge() >= 18);
-
 				if (!hasAdult) {
 					throw new IllegalArgumentException("Cannot update booking without an associated adult customer.");
 				}
@@ -131,7 +138,8 @@ public class BookingDetailsService {
 
 			// Save the updated booking details
 			bookingRepo.save(existingBooking);
-			BookingDetails updatedBooking = bookingRepo.save(existingBooking);
+			logger.info("Updating booking details of : {}", id);
+			//BookingDetails updatedBooking = bookingRepo.save(existingBooking);
 
 
 		}
@@ -140,24 +148,14 @@ public class BookingDetailsService {
 		}
 		
 	}
-
-//	public boolean deleteBookingDetails(Long id) {
-//		Optional<BookingDetails> bookingDetailsOptional = bookingRepo.findById(id);
-//
-//		if (bookingDetailsOptional.isPresent()) {
-//			bookingRepo.deleteById(id);
-//		} else {
-//			throw new IllegalArgumentException("Cannot delete booking as Booking ID does not exist.");
-//		}
-//		return true;
-//	}
-		public void deleteBookingDetails(Long bookingId) {
-			if (bookingRepo.existsById(bookingId)) {
-				bookingRepo.deleteById(bookingId);
-			} else {
-				throw new NoSuchElementException("Cannot delete booking as Booking ID does not exist.");
-			}
+	public void deleteBookingDetails(Long bookingId) {
+		if (bookingRepo.existsById(bookingId)) {
+			bookingRepo.deleteById(bookingId);
+			logger.info("deleting booking details of : {}", bookingId);
+		} else {
+			throw new NoSuchElementException("Cannot delete booking as Booking ID does not exist.");
 		}
+	}
 
 
 
