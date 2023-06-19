@@ -84,7 +84,6 @@ public class BookingDetailsService {
 
 	public void updateBookingDetails(Long id, BookingDetails bookingDetails) {
 		Optional<BookingDetails> existingBookingOptional = bookingRepo.findById(id);
-
 		if (existingBookingOptional.isPresent()) {
 			//calculating the number of days (duration)
 			BookingDetails existingBooking = existingBookingOptional.get();

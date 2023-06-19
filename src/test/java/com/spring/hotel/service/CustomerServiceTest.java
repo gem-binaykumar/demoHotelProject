@@ -1,4 +1,5 @@
 package com.spring.hotel.service;
+
 import com.spring.hotel.model.BookingDetails;
 import com.spring.hotel.model.Customer;
 import com.spring.hotel.repository.BookingDetailsRepository;
@@ -11,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -81,21 +83,27 @@ public class CustomerServiceTest {
 
         Optional<Customer> existingCustomerOptional = Optional.of(existingCustomer);
         BookingDetails bookingDetails = new BookingDetails();
+        bookingDetails.setBookingID(bookingID); // Set the ID of the booking details
         bookingDetails.setCust(new ArrayList<>());
-        existingCustomer.setBookingDetails(bookingDetails);
+
+        // Configure mock behavior
         when(customerRepo.findById(customerID)).thenReturn(existingCustomerOptional);
         when(customerRepo.save(existingCustomer)).thenReturn(existingCustomer);
+        when(bookingDetailsRepo.findById(bookingID)).thenReturn(Optional.of(bookingDetails));
 
+        // Invoke the method and assert the results
         assertDoesNotThrow(() -> customerService.updateCustomer(customerID, bookingID, updatedCustomer));
-
         assertEquals(updatedCustomer.getFullName(), existingCustomer.getFullName());
         assertEquals(updatedCustomer.getAddress(), existingCustomer.getAddress());
         assertEquals(updatedCustomer.getContactNumber(), existingCustomer.getContactNumber());
         assertEquals(updatedCustomer.getAge(), existingCustomer.getAge());
 
+        // Verify the mock interactions
         verify(customerRepo, times(1)).findById(customerID);
         verify(customerRepo, times(1)).save(existingCustomer);
+        verify(bookingDetailsRepo, times(1)).findById(bookingID);
     }
+
 
     @Test
     public void testDeleteCustomer() {
@@ -109,6 +117,4 @@ public class CustomerServiceTest {
         verify(customerRepo, times(1)).existsById(customerID);
         verify(customerRepo, times(1)).deleteById(customerID);
     }
-
-
 }

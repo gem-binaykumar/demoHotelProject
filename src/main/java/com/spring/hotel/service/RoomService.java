@@ -29,7 +29,14 @@ public class RoomService {
 		return bookingDetailsRepo.findById(bookingID)
 				.orElseThrow(() -> new NoSuchElementException("Booking ID does not exist."));
 	}
-	public void updateBookingDetailsRecords(BookingDetails bookingDetails){
+	public void updateBookingDetailsRecords(BookingDetails bookingDetails) {
+		if (bookingDetails.getRoom() == null) {
+			bookingDetails.setRoom(new ArrayList<>());
+		}
+
+		Double discountPercentage = bookingDetails.getDiscountPercentage();
+		double percentage = discountPercentage != null ? discountPercentage.doubleValue() : 0.0;
+
 		// Calculate total price
 		double totalPrice = 0;
 		for (Room room : bookingDetails.getRoom()) {
@@ -37,11 +44,10 @@ public class RoomService {
 		}
 		bookingDetails.setBill_amount(totalPrice);
 
-		if(bookingDetails.getDiscountPercentage()>=0){
-			totalPrice = totalPrice-(totalPrice*bookingDetails.getDiscountPercentage()/100.0);
+		if (bookingDetails.getDiscountPercentage() != null && bookingDetails.getDiscountPercentage() >= 0) {
+			totalPrice = totalPrice - (totalPrice * bookingDetails.getDiscountPercentage() / 100.0);
 			bookingDetails.setBill_amount(totalPrice);
-		}
-		else{
+		} else {
 			bookingDetails.setBill_amount(totalPrice);
 		}
 
@@ -52,9 +58,11 @@ public class RoomService {
 		} else {
 			bookingDetails.setAdvanceAmount(0); // No advance payment required
 		}
+
 		bookingDetailsRepo.save(bookingDetails);
 	}
-	
+
+
 	public void addRoom(Long bookingID,Room roomDetails) {
 		BookingDetails bookingDetails = checkIfBdExist(bookingID);
 		roomDetails.setBookingDetails(bookingDetails);
