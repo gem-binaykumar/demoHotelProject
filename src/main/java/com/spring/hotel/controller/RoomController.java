@@ -3,11 +3,8 @@ package com.spring.hotel.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.spring.hotel.model.Room;
 import com.spring.hotel.service.RoomService;
@@ -22,20 +19,23 @@ public class RoomController {
 	public List<Room> getAllRooms(){
 		return roomServ.getAllRooms();
 	}
-	
-	@RequestMapping(method= RequestMethod.POST, value ="/roomDetails")
-	public void addRoom(@RequestBody Room roomDetails) {
 
-		roomServ.addRoom(roomDetails);
+	@PostMapping("/roomDetails/{bookingID}")
+	public ResponseEntity<String> addRoom(@PathVariable Long bookingID,@RequestBody Room roomDetails) {
+		roomServ.addRoom(bookingID,roomDetails);
+		return ResponseEntity.ok("Data added successfully");
 	}
-	
-	@RequestMapping(method= RequestMethod.PUT, value ="/roomDetails/{roomID}")
-	public void updateRoom(@PathVariable Long roomID,@RequestBody Room roomDetails) {
-		roomServ.updateRoom(roomID,roomDetails);
+
+	@PutMapping("/roomDetails/{roomID}/{bookingID}")
+	public ResponseEntity<String> updateRoom(@PathVariable Long roomID, @PathVariable Long bookingID, @RequestBody Room roomDetails) {
+		roomServ.updateRoom(roomID,bookingID, roomDetails);
+		return ResponseEntity.ok("Data updated successfully");
 	}
-	
-	@RequestMapping(method=RequestMethod.DELETE , value ="/roomDetails/{roomID}")
-	public void deleteRoom(@PathVariable Long roomID) {
+
+	@DeleteMapping("/roomDetails/{roomID}")
+	public ResponseEntity<String> deleteRoom(@PathVariable Long roomID) {
 		roomServ.deleteRoom(roomID);
+		return ResponseEntity.ok("Data deleted successfully");
 	}
+
 }

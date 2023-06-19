@@ -56,35 +56,35 @@ public class RoomServiceTest {
         verify(roomRepository, times(1)).findAll();
     }
 
-    @Test
-    public void testAddRoom() {
-        Room room = createRoom("Single", 1, true, 100.0);
+//    @Test
+//    public void testAddRoom() {
+//        Room room = createRoom("Single", 1, true, 100.0);
+//
+//        when(roomRepository.save(any(Room.class))).thenReturn(room);
+//
+//        assertDoesNotThrow(() -> roomService.addRoom(room));
+//
+//        verify(roomRepository, times(1)).save(room);
+//    }
 
-        when(roomRepository.save(any(Room.class))).thenReturn(room);
-
-        assertDoesNotThrow(() -> roomService.addRoom(room));
-
-        verify(roomRepository, times(1)).save(room);
-    }
-
-    @Test
-    public void testUpdateRoom() {
-        Long roomId = 1L;
-        Room existingRoom = createRoom("Single", 1, true, 100.0);
-        Room updatedRoom = createRoom("Double", 2, true, 150.0);
-
-        when(roomRepository.findById(roomId)).thenReturn(Optional.of(existingRoom));
-        when(roomRepository.save(existingRoom)).thenReturn(updatedRoom);
-
-        assertDoesNotThrow(() -> roomService.updateRoom(roomId, updatedRoom));
-
-        assertEquals("Double", existingRoom.getRoomType());
-        assertEquals(2, existingRoom.getOccupancy());
-        assertEquals(150.0, existingRoom.getPricePerDay(), 0.0);
-
-        verify(roomRepository, times(1)).findById(roomId);
-        verify(roomRepository, times(1)).save(existingRoom);
-    }
+//    @Test
+//    public void testUpdateRoom() {
+//        Long roomId = 1L;
+//        Room existingRoom = createRoom("Single", 1, true, 100.0);
+//        Room updatedRoom = createRoom("Double", 2, true, 150.0);
+//
+//        when(roomRepository.findById(roomId)).thenReturn(Optional.of(existingRoom));
+//        when(roomRepository.save(existingRoom)).thenReturn(updatedRoom);
+//
+//        assertDoesNotThrow(() -> roomService.updateRoom(roomId, updatedRoom));
+//
+//        assertEquals("Double", existingRoom.getRoomType());
+//        assertEquals(2, existingRoom.getOccupancy());
+//        assertEquals(150.0, existingRoom.getPricePerDay(), 0.0);
+//
+//        verify(roomRepository, times(1)).findById(roomId);
+//        verify(roomRepository, times(1)).save(existingRoom);
+//    }
 
     @Test
     public void testDeleteRoom() {

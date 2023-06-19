@@ -102,22 +102,22 @@ public class BookingDetailsService {
 				}
 			}
 
-			double netAmt=0;
+			//double netAmt=0;
 			double totalAmount = 0;
 			for (Room room : bookingDetails.getRoom()) {
 				totalAmount += room.getPricePerDay() * bookingDetails.getDuration();
 			}
 
 			if(bookingDetails.getDiscountPercentage()>=0){
-				netAmt = totalAmount-(totalAmount*bookingDetails.getDiscountPercentage()/100.0);
-				bookingDetails.setBill_amount(netAmt);
+				totalAmount = totalAmount-(totalAmount*bookingDetails.getDiscountPercentage()/100.0);
+				bookingDetails.setBill_amount(totalAmount);
 			}
 			else{
 				bookingDetails.setBill_amount(totalAmount);
 			}
 
 			if (bookingDetails.getRoom().size() > 3) {
-				double advanceAmount = netAmt * 0.5;
+				double advanceAmount = totalAmount * 0.5;
 				bookingDetails.setAdvanceAmount(advanceAmount);
 			} else {
 				bookingDetails.setAdvanceAmount(0); // No advance payment required

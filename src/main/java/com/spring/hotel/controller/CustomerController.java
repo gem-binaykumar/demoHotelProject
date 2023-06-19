@@ -3,6 +3,7 @@ package com.spring.hotel.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.spring.hotel.model.Customer;
@@ -21,20 +22,22 @@ public class CustomerController {
 		return customers;
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/custDetails/{bookingID}")
-	public void addCustomer(@PathVariable Long bookingID, @RequestBody Customer custDetails) {
+	@PostMapping("/custDetails/{bookingID}")
+	public ResponseEntity<String> addCustomer(@PathVariable Long bookingID, @RequestBody Customer custDetails) {
 		custServ.addCustomer(bookingID, custDetails);
+		return ResponseEntity.ok("Data added successfully");
 	}
 
-	@RequestMapping(method = RequestMethod.PUT, value = "/custDetails/{customerID}/{bookingID}")
-	public void updateCustomer(@PathVariable Long customerID, @PathVariable Long bookingID, @RequestBody Customer custDetails) {
+	@PutMapping("/custDetails/{customerID}/{bookingID}")
+	public ResponseEntity<String> updateCustomer(@PathVariable Long customerID, @PathVariable Long bookingID, @RequestBody Customer custDetails) {
 		custServ.updateCustomer(customerID, bookingID, custDetails);
+		return ResponseEntity.ok("Data updated successfully");
 	}
 
-
-
-	@RequestMapping(method=RequestMethod.DELETE , value ="/custDetails/{customerID}")
-	public void deleteCustomer(@PathVariable Long customerID) {
+	@DeleteMapping("/custDetails/{customerID}")
+	public ResponseEntity<String> deleteCustomer(@PathVariable Long customerID) {
 		custServ.deleteCustomer(customerID);
+		return ResponseEntity.ok("Data deleted successfully");
 	}
+
 }
