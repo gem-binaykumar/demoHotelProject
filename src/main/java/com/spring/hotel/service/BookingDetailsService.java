@@ -21,9 +21,6 @@ public class BookingDetailsService {
 	@Autowired
 	public BookingDetailsRepository bookingRepo;
 	private static final Logger logger = LoggerFactory.getLogger(BookingDetailsService.class);
-
-
-
 	public List<BookingDetails> getAllBookingDetails() {
 		logger.debug("Fetching all booking details.");
 		return new ArrayList<>(bookingRepo.findAll());
@@ -66,17 +63,12 @@ public class BookingDetailsService {
 		else{
 			bookingDetails.setBill_amount(totalAmount);
 		}
-
-
-
 		if (bookingDetails.getRoom().size() > 3) {
 			double advanceAmount = netAmt * 0.5;
 			bookingDetails.setAdvanceAmount(advanceAmount);
 		} else {
 			bookingDetails.setAdvanceAmount(0); // No advance payment required
 		}
-
-
 		// Save the booking details
 		bookingRepo.save(bookingDetails);
 		
@@ -90,7 +82,6 @@ public class BookingDetailsService {
 			long durationInMillis = bookingDetails.getEnd_date().getTime() - bookingDetails.getStart_date().getTime();
 			int durationInDays = (int) TimeUnit.DAYS.convert(durationInMillis, TimeUnit.MILLISECONDS) + 1;
 			bookingDetails.setDuration(durationInDays);
-
 
 			// Check if there are any minor customers in the updated booking details
 			if (bookingDetails.getCust().stream().anyMatch(c -> c.getAge() < 18)) {
@@ -140,7 +131,6 @@ public class BookingDetailsService {
 			logger.info("Updating booking details of : {}", id);
 			//BookingDetails updatedBooking = bookingRepo.save(existingBooking);
 
-
 		}
 		else{
 			throw new NoSuchElementException("Cannot update booking as Booking ID does not exist.");
@@ -155,7 +145,4 @@ public class BookingDetailsService {
 			throw new NoSuchElementException("Cannot delete booking as Booking ID does not exist.");
 		}
 	}
-
-
-
 }
