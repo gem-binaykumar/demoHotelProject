@@ -6,6 +6,8 @@ import java.util.NoSuchElementException;
 
 import com.spring.hotel.model.BookingDetails;
 import com.spring.hotel.repository.BookingDetailsRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,17 +21,21 @@ public class RoomService {
 	public RoomRepository roomRepo;
 	@Autowired
 	public BookingDetailsRepository bookingDetailsRepo;
+	private static final Logger logger = LoggerFactory.getLogger(BookingDetailsService.class);
 	
 	public List<Room> getAllRooms(){
+		logger.info("Getting all room details");
 		List<Room> roomDetail = new ArrayList<>();
 		roomRepo.findAll().forEach(roomDetail::add);
 		return roomDetail;
 	}
 	public BookingDetails checkIfBdExist(Long bookingID){
+		logger.info("Checking if Booking Details exists by its id:{}",bookingID);
 		return bookingDetailsRepo.findById(bookingID)
 				.orElseThrow(() -> new NoSuchElementException("Booking ID does not exist."));
 	}
 	public void updateBookingDetailsRecords(BookingDetails bookingDetails) {
+		logger.info("Updating Room Details");
 		if (bookingDetails.getRoom() == null) {
 			bookingDetails.setRoom(new ArrayList<>());
 		}
@@ -64,6 +70,7 @@ public class RoomService {
 
 
 	public void addRoom(Long bookingID,Room roomDetails) {
+		logger.info("Adding Room");
 		BookingDetails bookingDetails = checkIfBdExist(bookingID);
 		roomDetails.setBookingDetails(bookingDetails);
 		roomRepo.save(roomDetails);
@@ -71,6 +78,7 @@ public class RoomService {
 		
 	}
 	public void updateRoom(Long id, Long bookingID, Room roomDetails) {
+		logger.info("Updating Room by its  Booking id:{} and room id:{}",bookingID,id);
 		BookingDetails bookingDetails = checkIfBdExist(bookingID);
 		Room existingRoom = roomRepo.findById(id).orElse(null);
 		if (existingRoom != null) {
@@ -80,7 +88,6 @@ public class RoomService {
 			existingRoom.setPricePerDay(roomDetails.getPricePerDay());
 			existingRoom.setCheckedIn(roomDetails.isCheckedIn());
 			existingRoom.setCheckedOut(roomDetails.isCheckedOut());
-
 			// Restore the existing IDs
 			existingRoom.setBookingDetails(bookingDetails);
 			roomRepo.save(existingRoom);
@@ -90,6 +97,7 @@ public class RoomService {
 	}
 
 	public void deleteRoom(Long id) {
+		logger.info("Deleting Customer by its Room id:{}",id);
 		Room rooms = roomRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Room ID :"+id+" does not exist."));
 		roomRepo.deleteById(id);
 		BookingDetails bookingDetails = rooms.getBookingDetails();

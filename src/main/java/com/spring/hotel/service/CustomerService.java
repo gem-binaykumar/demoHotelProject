@@ -6,6 +6,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import com.spring.hotel.repository.BookingDetailsRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,19 +21,23 @@ public class CustomerService {
 	public CustomerRepository customerRepo;
 	@Autowired
 	public BookingDetailsRepository bookingDetailsRepo;
+	private static final Logger logger = LoggerFactory.getLogger(BookingDetailsService.class);
 
 
 	public List<Customer> getAllCustomer() {
+		logger.info("Getting all customer details");
 		return new ArrayList<>(customerRepo.findAll());
 	}
 
-	// checks if Booking Id exists or not
+	// checks if Booking ID exists or not
 	public BookingDetails checkIfBdExist(Long bookingID){
+		logger.info("Checking if Booking Details exists by its id:{}",bookingID);
 		return bookingDetailsRepo.findById(bookingID)
 				.orElseThrow(() -> new NoSuchElementException("Booking ID does not exist."));
 	}
 
 	public void addCustomer(Long bookingID, Customer custDetails) {
+		logger.info("Adding Customer by its  Booking id:{}",bookingID);
 		BookingDetails bookingDetails = checkIfBdExist(bookingID);
 		if (custDetails.getAge() < 18) {
 			boolean hasAdult = bookingDetails.getCust().stream().anyMatch(c -> c.getAge() >= 18);
@@ -46,6 +52,7 @@ public class CustomerService {
 
 
 	public void updateCustomer(Long customerID, Long bookingID, Customer custDetails) {
+		logger.info("Updating Customer by its  Booking id:{} and Customer id:{}",bookingID,customerID);
 		BookingDetails bookingDetails = checkIfBdExist(bookingID);
 		Optional<Customer> existingCustomerOptional = customerRepo.findById(customerID);
 		if (existingCustomerOptional.isPresent()) {
@@ -59,7 +66,6 @@ public class CustomerService {
 					throw new IllegalArgumentException("Cannot update a minor customer without an associated adult.");
 				}
 			}
-
 			// Update the specific fields of the existing customer
 			existingCustomer.setFullName(custDetails.getFullName());
 			existingCustomer.setAddress(custDetails.getAddress());
@@ -74,10 +80,11 @@ public class CustomerService {
 	}
 
 	public void deleteCustomer(Long id) {
+		logger.info("Deleting Customer by its Customer id:{}",id);
 		if (customerRepo.existsById(id)) {
 			customerRepo.deleteById(id);
 		} else {
-			throw new NoSuchElementException("Cannot delete booking as Booking ID does not exist.");
+			throw new NoSuchElementException("Cannot delete booking as Customer ID does not exist.");
 		}
 	}
 }
