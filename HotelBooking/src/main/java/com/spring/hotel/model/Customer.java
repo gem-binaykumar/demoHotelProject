@@ -36,4 +36,5 @@ public class Customer {
 	@JsonIgnore
 	private BookingDetails bookingDetails;
 
+
 }

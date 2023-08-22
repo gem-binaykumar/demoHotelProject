@@ -1,0 +1,143 @@
+{
+
+        "start_date": "2023-05-18",
+
+        "end_date": "2023-05-20",
+
+        "modeOfBooking": "Online",
+
+        "modeOfPayment": "Credit Card",
+
+        "discountPercentage": 25.0,
+
+        "cust": [
+
+            {
+
+                "fullName": "Binay Kumar",
+
+                "address": "123 Main St",
+
+                "contactNumber": "9876543210",
+
+                "age": 13
+
+            },
+
+            {
+
+                "fullName": "Gurjot Parmar",
+
+                "address": "456 Elm St",
+
+                "contactNumber": "1234567890",
+
+                "age": 14
+
+            },
+
+            {
+
+                "fullName": "Radhika Narang",
+
+                "address": "789 Oak St",
+
+                "contactNumber": "5551234567",
+
+                "age": 25
+
+            },
+
+            {
+
+                "fullName": "Shaurya Dev",
+
+                "address": "321 Pine St",
+
+                "contactNumber": "9876543210",
+
+                "age": 15
+
+            }
+
+        ],
+
+        "room": [
+
+            {
+
+                "roomNumber": 201,
+
+                "roomType": "Double",
+
+                "occupancy": 2,
+
+                "availability": true,
+
+                "pricePerDay": 1000.0,
+
+                "checkedIn": false,
+
+                "checkedOut": false
+
+            },
+
+            {
+
+                "roomNumber": 202,
+
+                "roomType": "Single",
+
+                "occupancy": 1,
+
+                "availability": true,
+
+                "pricePerDay": 500.0,
+
+                "checkedIn": false,
+
+                "checkedOut": false
+
+            },
+
+            {
+
+                "roomNumber": 203,
+
+                "roomType": "Double",
+
+                "occupancy": 2,
+
+                "availability": true,
+
+                "pricePerDay": 1000.0,
+
+                "checkedIn": false,
+
+                "checkedOut": false
+
+            },
+
+            {
+
+                "roomNumber": 204,
+
+                "roomType": "Double",
+
+                "occupancy": 2,
+
+                "availability": true,
+
+                "pricePerDay": 1000.0,
+
+                "checkedIn": false,
+
+                "checkedOut": false
+
+            }
+
+        ]
+
+        
+
+ }
